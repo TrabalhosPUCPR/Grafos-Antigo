@@ -1,34 +1,34 @@
 import java.util.ArrayList;
 
 public class Grafo {
-    ArrayList<Node<?>> nodes;
-    ArrayList<ArrayList<Integer>> matrizAd;
+    ArrayList<String> nodes;
+    Matrix matrizAd;
     public Grafo(){
         this.nodes = new ArrayList<>();
-        this.matrizAd = new ArrayList<>();
-        matrizAd.add(new ArrayList<>());
-        matrizAd.add(new ArrayList<>());
+        this.matrizAd = new Matrix(0, 0);
     }
-    public Grafo(ArrayList<Node<?>> nodes){
+
+    public Grafo(ArrayList<String> nodes){
         this.nodes = nodes;
-        this.matrizAd = new ArrayList<>();
-        matrizAd.add(new ArrayList<>());
-        matrizAd.add(new ArrayList<>());
+        this.matrizAd = new Matrix(nodes.size(), nodes.size());
     }
-    public void addNode(Node<?> node){
+    public void addNode(String node){
         nodes.add(node);
-        matrizAd.get(0).add(0);
-        matrizAd.get(1).add(0);
+        this.matrizAd.addLineColumn(1, 1);
+        this.matrizAd.setLabelColumn(this.matrizAd.getheight() - 1, node);
+        this.matrizAd.setLabelLine(this.matrizAd.getWidth() - 1, node);
+        this.matrizAd.setValue(this.matrizAd.getWidth() - 1, this.matrizAd.getheight() - 1, -1);
     }
-    public void createAdjacencia(Node<?> node1, Node<?> node2, int peso){
-        matrizAd.get(0).set(nodes.indexOf(node1), peso);
-        matrizAd.get(1).set(nodes.indexOf(node2), peso);
+    public void createAdjacencia(String node1, String node2, int peso){
+        matrizAd.setValueFromLabel(node1, node2, peso);
     }
-    public void removeAdjacencia(Node<?> node1, Node<?> node2){
-        matrizAd.get(0).set(nodes.indexOf(node1), 0);
-        matrizAd.get(1).set(nodes.indexOf(node2), 0);
+    public void removeAdjacencia(String node1, String node2){
+        matrizAd.setValueFromLabel(node1, node2, 0);
     }
-    public void setRotulo(Node<?> node, String v){
-        nodes.get(nodes.indexOf(node)).setRotulo(v);
+    public String getNode(int i){
+        return nodes.get(i);
+    }
+    public void printMatrizAd(){
+        this.matrizAd.printMatrix();
     }
 }

@@ -1,11 +1,9 @@
 public class Node<T>{
-    T valor;
-    String rotulo;
-    public Node(T valor){
-        this.valor = valor;
+    T label;
+    public Node(T label){
+        this.label = label;
     }
-    public void setRotulo(String v){
-        this.rotulo = v;
+    public void setLabel(T l){
+        this.label = l;
     }
-
 }
