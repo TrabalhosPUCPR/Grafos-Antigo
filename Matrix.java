@@ -4,6 +4,7 @@ public class Matrix {
     int width;
     int height;
     int matrix[][];
+    int cellWidth = 2;
 
     public Matrix(int width, int height){
         this.width = width;
@@ -99,45 +100,80 @@ public class Matrix {
 
     public void setLabelColumn(int col, String label){
         this.col_labels[col] = label;
+        if(cellWidth < label.length()) cellWidth = label.length();
     }
     public void setLabelLine(int line, String label){
         this.line_labels[line] = label;
+        if(cellWidth < label.length()) cellWidth = label.length();
     }
 
     public void printMatrix(){
-        // pega o label das colunas que tem o maior tamanho
-        int cellWidth = col_labels[0].length();
-        for(int i = 0; i < width; i++){
-            if(col_labels[i].length() > cellWidth){
-                cellWidth = col_labels[i].length();
-            }
-        }
-        // o espaco real vai ser essa variavel + 4, 2 espacos vazio para cada lado pra deixar 
+   
+        // o espaco de cada celula é cellWidth + 4, 2 espacos vazio em cada lado pra deixar 
         //mais bonito
 
-        System.out.print("|  " + " ".repeat(cellWidth) + "  |");
+        System.out.print("||  " + " ".repeat(cellWidth) + "  ||");
 
         // 1 for desses por linha, mas esse fica fora pq ele e a primeira linha, so imprime os labels das colunas
         for(int i = 0; i < width; i++){
             // e um print meio pesado mas e pra ficar legal
-            System.out.print("  " + verTamMax_table(col_labels[i], cellWidth) + "  |");
+            System.out.print("  " + build_text(col_labels[i], cellWidth) + "  |");
         }
         System.out.println("");
-
+        System.out.print("||--" + "-".repeat(cellWidth) + "--||");
+        
+        // mais um for so pra deixar separado os labels e os valores
+        for(int i = 1; i < width + 1; i++){
+            System.out.print("--" + "-".repeat(cellWidth) + "--|");
+        }
+        System.out.println("");
+        
         // a partir daqui comeca a imprimir o label da coluna e os valores da matriz
         for(int y = 0; y < height; y++){
-            System.out.print("|  " + verTamMax_table(line_labels[y], cellWidth) + "  |");
+            System.out.print("||  " + build_text(line_labels[y], cellWidth) + "  ||");
             for(int x = 0; x < width; x++){
-                System.out.print("  " + verTamMax_table(matrix[y][x], cellWidth) + "  |");
+                System.out.print("  " + build_text(matrix[y][x], cellWidth) + "  |");
             }
             System.out.println("");
         }
     }
 
     public int getWidth(){return this.width;}
-    public int getheight(){return this.height;}
+    public int getheight(){return height;}
+    
+    public int[] getColumnFromLabel(String label) {
+    	for(int i = 0; i < col_labels.length; i++) {
+    		if(col_labels[i].equals(label)) {
+    			return getColumn(i);
+    		}
+    	}
+    	return new int[0];
+    }
+    public int[] getColumn(int column) {
+    	int columnValues[] = new int[width];
+    	for(int i = 0; i < width; i++) {
+    		columnValues[i] = this.matrix[i][column];
+    	}
+    	return columnValues;
+    }
+    
+    public int[] getLine(int line) {
+    	int lineValues[] = new int[height];
+    	for(int i = 0; i < height; i++) {
+    		lineValues[i] = this.matrix[line][i];
+    	}
+    	return lineValues;
+    }
+    public int[] getLineFromLabel(String label) {
+    	for(int i = 0; i < line_labels.length; i++) {
+    		if(line_labels[i].equals(label)) {
+    			return getLine(i);
+    		}
+    	}
+    	return new int[0];
+    }
 
-    private static String verTamMax_table(Object texto, int max){
+    private static String build_text(Object texto, int max){
         String tex = texto.toString();
         String tex2;
         boolean rev = false;
