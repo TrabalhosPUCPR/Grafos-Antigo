@@ -1,9 +1,11 @@
+import java.util.Arrays;
+
 public class Matrix {
-    String col_labels[];
-    String line_labels[];
+    String[] col_labels;
+    String[] line_labels;
     int width;
     int height;
-    int matrix[][];
+    double[][] matrix;
     int cellWidth = 2;
 
     public Matrix(int width, int height){
@@ -11,14 +13,15 @@ public class Matrix {
         this.height = height;
         col_labels = new String[width];
         line_labels = new String[height];
-        matrix = new int[width][height];
+        matrix = new double[width][height];
     }
 
     public void addColumn(int toAdd){
         width += toAdd;
-        int N[][] = new int[width][height];
-        String colL[] = new String[width];
+        double[][] N = new double[width][height];
+        String[] colL = new String[width];
         if(matrix.length == 0){
+            Arrays.fill(N[0], Double.POSITIVE_INFINITY);
             col_labels = colL;
             matrix = N;
             return;
@@ -34,12 +37,17 @@ public class Matrix {
         col_labels = colL;
     }
 
-    public void addLineColumn(int toAddLine, int toAddCollumn){
-        height += toAddCollumn;
+    public void addLineColumn(int toAddLine, int toAddColumn){
+        height += toAddColumn;
         width += toAddLine;
-        int N[][] = new int[width][height];
-        String colL[] = new String[width];
-        String lineL[] = new String[height];
+        double[][] N = new double[height][width];
+        for(int i = 0; i < width; i++){
+            for (int j = 0; j < height; j++){
+                N[i][j] = Double.POSITIVE_INFINITY;
+            }
+        }
+        String[] colL = new String[width];
+        String[] lineL = new String[height];
         if(matrix.length == 0){
             col_labels = colL;
             line_labels = lineL;
@@ -47,14 +55,10 @@ public class Matrix {
             return;
         }
         for(int y = 0; y < matrix.length; y++){
-            colL[y] = col_labels[y];
-            for(int x = 0; x < matrix[y].length; x++){
-                N[y][x] = matrix[y][x];
-            }
+            System.arraycopy(matrix[y], 0, N[y], 0, matrix[y].length);
         }
-        for(int x = 0; x < height - 1; x++){
-            lineL[x] = line_labels[x];
-        }
+        System.arraycopy(line_labels, 0, colL, 0, width - 1);
+        System.arraycopy(line_labels, 0, lineL, 0, height - 1);
         line_labels = lineL;
         col_labels = colL;
         matrix = N;
@@ -62,30 +66,29 @@ public class Matrix {
 
     public void addLine(int toAdd){
         height += toAdd;
-        int N[][] = new int[width][height];
-        String lineL[] = new String[height];
+        double[][] N = new double[width][height];
+        String[] lineL = new String[height];
         if(matrix.length == 0){
+            Arrays.fill(N[0], Double.POSITIVE_INFINITY);
             line_labels = lineL;
             matrix = N;
             return;
         }
         for(int y = 0; y < matrix.length; y++){
             N[y] = matrix[y];
-            for(int x = 0; x < matrix[0].length; x++){
-                N[x] = matrix[x];
-            }
+            System.arraycopy(matrix, 0, N, 0, matrix[0].length);
         }
         line_labels = lineL;
         matrix = N;
     }
 
-    public int getValue(int x, int y){
+    public double getValue(int x, int y){
         return matrix[x][y];
     }
-    public void setValue(int x, int y, int value){
+    public void setValue(int x, int y, double value){
         matrix[x][y] = value;
     }
-    public void setValueFromLabel(String labelX, String LabelY, int value){
+    public void setValueFromLabel(String labelX, String LabelY, double value){
         for(int i = 0; i < col_labels.length; i++){
             if(col_labels[i].equals(LabelY)){
                 for(int j = 0; j < line_labels.length; j++){
@@ -132,7 +135,11 @@ public class Matrix {
         for(int y = 0; y < height; y++){
             System.out.print("||  " + build_text(line_labels[y], cellWidth) + "  ||");
             for(int x = 0; x < width; x++){
-                System.out.print("  " + build_text(matrix[y][x], cellWidth) + "  |");
+                if (matrix[y][x] == Double.POSITIVE_INFINITY){
+                    System.out.print("  " + build_text("-", cellWidth) + "  |");
+                }else{
+                    System.out.print("  " + build_text(String.format("%, .0f", matrix[y][x]), cellWidth) + "  |");
+                }
             }
             System.out.println("");
         }
@@ -141,58 +148,56 @@ public class Matrix {
     public int getWidth(){return this.width;}
     public int getheight(){return height;}
     
-    public int[] getColumnFromLabel(String label) {
+    public double[] getColumnFromLabel(String label) {
     	for(int i = 0; i < col_labels.length; i++) {
     		if(col_labels[i].equals(label)) {
     			return getColumn(i);
     		}
     	}
-    	return new int[0];
+    	return new double[0];
     }
-    public int[] getColumn(int column) {
-    	int columnValues[] = new int[width];
+    public double[] getColumn(int column) {
+        double[] columnValues = new double[width];
     	for(int i = 0; i < width; i++) {
     		columnValues[i] = this.matrix[i][column];
     	}
     	return columnValues;
     }
     
-    public int[] getLine(int line) {
-    	int lineValues[] = new int[height];
-    	for(int i = 0; i < height; i++) {
-    		lineValues[i] = this.matrix[line][i];
-    	}
+    public double[] getLine(int line) {
+        double[] lineValues = new double[height];
+        System.arraycopy(this.matrix[line], 0, lineValues, 0, height);
     	return lineValues;
     }
-    public int[] getLineFromLabel(String label) {
+    public double[] getLineFromLabel(String label) {
     	for(int i = 0; i < line_labels.length; i++) {
     		if(line_labels[i].equals(label)) {
     			return getLine(i);
     		}
     	}
-    	return new int[0];
+    	return new double[0];
     }
 
     private static String build_text(Object texto, int max){
-        String tex = texto.toString();
-        String tex2;
+        StringBuilder tex = new StringBuilder(texto.toString());
+        StringBuilder tex2;
         boolean rev = false;
         while(tex.length() < max){
-            if(rev == false){
+            if(!rev){
                 rev = true;
-                tex = tex + " ";
+                tex.append(" ");
             }else{
                 rev = false;
-                tex = " " + tex;
+                tex.insert(0, " ");
             }
         }
         while(tex.length() > max){
-            tex2 = "";
+            tex2 = new StringBuilder();
             for(int i = 0; i < tex.length() - 1; i++){
-                tex2 += tex.charAt(i); 
+                tex2.append(tex.charAt(i));
             }
-            tex = tex2;
+            tex = new StringBuilder(tex2.toString());
         }
-        return tex;
+        return tex.toString();
     }
 }

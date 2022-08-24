@@ -8,15 +8,15 @@ public class App {
         grafo.addNode("3");
         grafo.addNode("4");
         grafo.addNode("100000");
-        grafo.createAdjacencia("1", "2", 20);
-        grafo.createAdjacencia("2", "1", 10);
-        grafo.createAdjacencia("100000", "4", 999);
-        grafo.createAdjacencia("4", "2", 5);
-        grafo.createAdjacencia("1", "3", 13);
-        grafo.removeAdjacencia("100000", "4");
-        grafo.setNode("100000", "5");
-        grafo.createAdjacencia("4", "5", 55);
-        grafo.printMatrizAd();
+        grafo.createAdjacencia(0, 1, 20);
+        grafo.createAdjacencia(1, 0, 10);
+        grafo.createAdjacencia(4, 3, 999);
+        grafo.createAdjacencia(3, 1, 5);
+        grafo.createAdjacencia(0, 2, 13);
+        grafo.removeAdjacencia(4, 3);
+        grafo.setNode(4, "5");
+        grafo.createAdjacencia(3, 4, 55);
+        grafo.printMatrixAd();
         
         String nodePraTestar = "1";
         ArrayList<String> adjacencias = new ArrayList<>();
