@@ -6,7 +6,7 @@ public class Matrix {
     int width;
     int height;
     double[][] matrix;
-    int cellWidth = 2;
+    int cellWidth = 1;
 
     public Matrix(int width, int height){
         this.width = width;
@@ -15,7 +15,6 @@ public class Matrix {
         line_labels = new String[height];
         matrix = new double[width][height];
     }
-
     public void addColumn(int toAdd){
         width += toAdd;
         double[][] N = new double[width][height];
@@ -86,6 +85,9 @@ public class Matrix {
         return matrix[x][y];
     }
     public void setValue(int x, int y, double value){
+        if (String.format("%, .0f", value).length() > cellWidth && value != Double.POSITIVE_INFINITY){
+            cellWidth = String.format("%, .0f", value).length();
+        }
         matrix[x][y] = value;
     }
     public void setValueFromLabel(String labelX, String LabelY, double value){
@@ -122,14 +124,14 @@ public class Matrix {
             // e um print meio pesado mas e pra ficar legal
             System.out.print("  " + build_text(col_labels[i], cellWidth) + "  |");
         }
-        System.out.println("");
+        System.out.println();
         System.out.print("||--" + "-".repeat(cellWidth) + "--||");
         
         // mais um for so pra deixar separado os labels e os valores
         for(int i = 1; i < width + 1; i++){
             System.out.print("--" + "-".repeat(cellWidth) + "--|");
         }
-        System.out.println("");
+        System.out.println();
         
         // a partir daqui comeca a imprimir o label da coluna e os valores da matriz
         for(int y = 0; y < height; y++){
@@ -141,7 +143,7 @@ public class Matrix {
                     System.out.print("  " + build_text(String.format("%, .0f", matrix[y][x]), cellWidth) + "  |");
                 }
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
@@ -199,5 +201,34 @@ public class Matrix {
             tex = new StringBuilder(tex2.toString());
         }
         return tex.toString();
+    }
+
+    public static void print2dArray(boolean[][] arr){
+
+        // o espaco de cada celula é cellWidth + 4, 2 espacos vazio em cada lado pra deixar
+        //mais bonito
+
+        int cellWidth = 8;
+        int width = arr[0].length;
+
+        System.out.print("  " + build_text("Index: ", cellWidth) + "  |");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print("  " + build_text(i, cellWidth) + "  |");
+        }
+
+        System.out.println();
+
+        // a partir daqui comeca a imprimir o label da coluna e os valores da matriz
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print("  " + build_text(i, cellWidth) + "  |");
+            for (int x = 0; x < width; x++) {
+                System.out.print("  " + build_text(arr[i][x], cellWidth) + "  |");
+            }
+            System.out.println("");
+        }
+    }
+
+    public double[][] getMatrix(){
+        return this.matrix;
     }
 }
