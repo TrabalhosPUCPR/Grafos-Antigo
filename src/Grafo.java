@@ -37,11 +37,19 @@ public class Grafo {
     public void createAdjacencia(String node1, String node2, int peso){
         matrixAd.setValueFromLabel(node1, node2, peso);
     }
+    public void createAdjacenciaNaoDirecionado(String node1, String node2, int peso){
+        matrixAd.setValueFromLabel(node1, node2, peso);
+        matrixAd.setValueFromLabel(node2, node1, peso);
+    }
     public void removeAdjacencia(String node1, String node2){
         matrixAd.setValueFromLabel(node1, node2, Double.POSITIVE_INFINITY);
     }
     public void createAdjacencia(int node1, int node2, int peso){
         matrixAd.setValue(node1, node2, peso);
+    }
+    public void createAdjacenciaNaoDirecionado(int node1, int node2, int peso){
+        matrixAd.setValue(node1, node2, peso);
+        matrixAd.setValue(node2, node1, peso);
     }
     public void removeAdjacencia(int node1, int node2){
         matrixAd.setValue(node1, node2, Double.POSITIVE_INFINITY);
