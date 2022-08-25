@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Grafo {
     ArrayList<String> nodes;
@@ -66,6 +67,29 @@ public class Grafo {
     public int getAdjacencias(String node, ArrayList<String> adjacentes) {
         return getAdjacencias(getIndex(node), adjacentes);
     }
+    private ArrayList<Integer> getAdjacenciesIndex(int node){
+        double[] temp = matrixAd.getLine(node);
+        ArrayList<Integer> adj = new ArrayList<>();
+        for (int i = 0; i < temp.length; i++){
+            if(temp[i] != Double.POSITIVE_INFINITY){
+                adj.add(i);
+            }
+        }
+        return adj;
+    }
+    private int getMinVertex(int node){
+        ArrayList<Integer> adj = getAdjacenciesIndex(node);
+        double lowest = getEdgeWeight(node, adj.get(0));
+        int a = adj.get(0);
+        for (int i = 1; i < adj.size(); i++){
+            double w = getEdgeWeight(node, adj.get(i));
+            if (w < lowest){
+                lowest = w;
+                a = adj.get(i);
+            }
+        }
+        return a;
+    }
     public int getIndex(String node){
         for(int i = 0; i < nodes.size(); i++){
             if(nodes.get(i).equals(node)){
@@ -73,6 +97,12 @@ public class Grafo {
             }
         }
         return -1;
+    }
+    public double getEdgeWeight(String node1, String node2){
+        return matrixAd.getLine(getIndex(node1))[getIndex(node2)];
+    }
+    public double getEdgeWeight(int node1, int node2){
+        return matrixAd.getLine(node1)[node2];
     }
     public void printMatrixAd(){
         this.matrixAd.printMatrix();
@@ -97,5 +127,56 @@ public class Grafo {
             }
         }
         return closure;
+    }
+    public ArrayList<String> getShortestPath(String node1, String node2){
+        return getShortestPath(getIndex(node1), getIndex(node2));
+    }
+    public ArrayList<String> getShortestPath(int node1, int node2) {
+        double[] distancia = new double[nodes.size()];
+        boolean[] perm = new boolean[nodes.size()];
+        int corrente, i, k=node1;
+        double menordist, novadist, dc;
+        int[] caminho = new int[nodes.size()];
+
+        for(i=0; i < nodes.size(); ++i){
+            perm[i] = false;
+            distancia[i] = Integer.MAX_VALUE;
+            caminho[i] = -1;
+        }
+        perm[node1] = true;
+        distancia[node1] = 0;
+        corrente = node1;
+        while(corrente != node2){
+            menordist = Integer.MAX_VALUE;
+            dc = distancia[corrente];
+            for(i = 0; i < nodes.size(); i++){
+                if(!perm[i]){
+                    novadist = dc + matrixAd.getValue(corrente, i);// arco[corrente][i].peso;
+                    if(novadist < distancia[i]){
+                        distancia[i] = novadist;
+                        caminho[i] = corrente;
+                    }
+                    if(distancia[i] < menordist){
+                        menordist = distancia[i];
+                        k = i;
+                    }
+                }
+            }
+            corrente = k;
+            perm[corrente] = true;
+        }
+        return getCaminho(node1, node2, caminho);
+    }
+    public ArrayList<String> getCaminho(int node1, int node2, int[] caminho){
+        int i = caminho[node2];
+        ArrayList<String> cam = new ArrayList<>();
+        cam.add(nodes.get(node2));
+        while (i != node1){
+            cam.add(nodes.get(i));
+            i = caminho[i];
+        }
+        cam.add(nodes.get(i));
+        Collections.reverse(cam);
+        return cam;
     }
 }
