@@ -10,3 +10,13 @@ Implemente as seguintes operações sobre esta representação:<br/><br/>
   void imprime_adjacencias() // imprime a matriz de adjacências do grafo<br/>
   void seta_informacao(i, String V) // atualiza a informação do nó i (rótulo) com o valor V (que deve ser uma string) no grafo<br/>
   int adjacentes(i, adj) // retorna o número de adjacentes ao vértice i no grafo e os armazena no vetor adj<br/>
+  
+ 
+ 
+## PARTE 2:
+Matriz de Alcançabilidade (0,5 Ponto)<br />
+Acrescente à representação de grafo implementada em um dos TDEs anteriores a implementação e teste do algoritmo de Warshall para determinação da matriz de Alcançabilidade (Fechamento Transitivo). Vc pode utilizar como referência o material de apoio das aulas assim como livros de referência.
+
+Algoritmo de Dijkstra (0,5 Ponto) <br />
+Acrescente à representação de grafo implementada em um dos TDEs anteriores a implementação e teste do algoritmo de Dijkstra. Vc pode utilizar como referência o material de apoio das aulas assim como livros de referência.
+
