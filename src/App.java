@@ -18,7 +18,6 @@ public class App {
         grafo.createAdjacencia("B", "D", 4);
         grafo.createAdjacencia("E", "F", 2);
         grafo.createAdjacencia("D", "F", 2);
-
         /* OUTROS EXEMPLOS
         grafo.addNode("1");
         grafo.addNode("2");

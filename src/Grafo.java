@@ -140,6 +140,9 @@ public class Grafo {
         return getShortestPath(getIndex(node1), getIndex(node2));
     }
     public ArrayList<String> getShortestPath(int node1, int node2) {
+        if(!getTransitiveClosureMatrix()[node1][node2]){
+            return new ArrayList<String>();
+        }
         double[] distancia = new double[nodes.size()];
         boolean[] perm = new boolean[nodes.size()];
         int corrente, i, k=node1;
